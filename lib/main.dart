@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 
 import 'package:aespack/aespack.dart';
@@ -15,36 +17,57 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final String _text = 'Test';
-  final String _key = '0102030405060708';
-  final String _iv = '1112131415161718';
+  // Symmetric key (for both encryption and decryption)
+  final String _key = 'd660370f115b55cb48a79c43aabb6e47';
+  // Initialization Vector
+  // to ensure that the same plaintext,
+  // when encrypted multiple times with the same key,
+  // does not produce the same ciphertext
+  final String _iv = '2d07b0fb33362b5b';
+
+  // variables to hold plain text and the chipher text
   String _encyrptedString = '';
-  String _decryptedString = 'Unknown';
+  String _decryptedString = '';
 
-  @override
-  void initState() {
-    super.initState();
-    initAesState();
-  }
-
-  Future<void> initAesState() async {
-    String decryptedString;
-    String text;
+  // Method to encypt data
+  Future<void> encryptingData(
+    String plainText,
+    String symmetricKey,
+    String initializationVector,
+  ) async {
+    String encryptedText;
 
     try {
-      text = await Aespack.encrypt(_text, _key, _iv) ?? '';
-      decryptedString =
-          await Aespack.decrypt(text, _key, _iv) ?? 'Failed to decrypt.';
+      encryptedText = await Aespack.encrypt(
+              plainText, symmetricKey, initializationVector) ??
+          '';
     } on Exception {
-      decryptedString = 'Failed to decrypt.';
-      text = 'Failed to encrypt';
+      encryptedText = 'Failed to encrypt';
     }
 
-    if (!mounted) return;
+    setState(() {
+      _encyrptedString = encryptedText;
+    });
+  }
+
+  // Method to decrypt data
+  Future<void> dencryptingData(
+    String chipherText,
+    String symmetricKey,
+    String initializationVector,
+  ) async {
+    String decryptedString;
+
+    try {
+      decryptedString = await Aespack.decrypt(
+              chipherText, symmetricKey, initializationVector) ??
+          'Failed to decrypt.';
+    } on Exception {
+      decryptedString = 'Failed to decrypt.';
+    }
 
     setState(() {
       _decryptedString = decryptedString;
-      _encyrptedString = text;
     });
   }
 
@@ -59,9 +82,24 @@ class _MyAppState extends State<MyApp> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Text : $_text\n'),
-              Text('Encrypted : $_encyrptedString\n'),
-              Text('Decrypted : $_decryptedString\n'),
+              // Button to encypt the data
+              ElevatedButton(
+                onPressed: () async {
+                  await encryptingData("Chanaka", _key, _iv);
+                  print("Encrypted data: $_encyrptedString");
+                },
+                child: const Text("Encrypt Data"),
+              ),
+
+              // Button to decrypt the data
+              ElevatedButton(
+                onPressed: () async {
+                  await dencryptingData(
+                      "u04le0BuDI/TqkTPhwRScA==", _key, _iv);
+                  print("Decrypted data: $_decryptedString");
+                },
+                child: const Text("Decrypt data"),
+              ),
             ],
           ),
         ),
