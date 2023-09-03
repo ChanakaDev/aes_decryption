@@ -3,16 +3,10 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:crypto/crypto.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart' hide Key;
 import 'package:encrypt/encrypt.dart' as enc;
 
-String mykey = 'd660370f115b55cb48a79c43aabb6e47';
-String myiv = '2d07b0fb33362b5b';
-
-final keyUtf8 = utf8.encode(mykey);
-final ivUtf8 = utf8.encode(myiv);
 void main() {
   runApp(const MyApp());
 }
@@ -25,8 +19,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final key = sha256.convert(keyUtf8).toString().substring(0, 32);
-  final iv = sha256.convert(ivUtf8).toString().substring(0, 16);
+  final key = enc.Key.fromUtf8('4f1aaae66406e358');
+  final iv = enc.IV.fromUtf8('df1e180949793972');
 
   // variables to hold plain text and the chipher text
   String _encyrptedString = '';
@@ -39,9 +33,8 @@ class _MyAppState extends State<MyApp> {
     try {
       // Encryption
       String plainText = 'Chanaka';
-      final encrypter =
-          enc.Encrypter(enc.AES(Key.fromUtf8(key), mode: AESMode.cbc));
-      final encrypted = encrypter.encrypt(plainText, iv: IV.fromUtf8(iv));
+      final encrypter = enc.Encrypter(enc.AES(key, mode: enc.AESMode.cbc));
+      final encrypted = encrypter.encrypt(plainText, iv: iv);
       encryptedText = encrypted.base64;
     } on Exception catch (e) {
       encryptedText = e.toString();
@@ -60,9 +53,9 @@ class _MyAppState extends State<MyApp> {
 
     try {
       final decrypter =
-          enc.Encrypter(enc.AES(Key.fromUtf8(key), mode: AESMode.cbc));
-      final decrypted = decrypter
-          .decryptBytes(Encrypted.fromBase64(chipherText), iv: IV.fromUtf8(iv));
+          enc.Encrypter(enc.AES(key, mode: enc.AESMode.cbc));
+      final decrypted =
+          decrypter.decryptBytes(Encrypted.from64(chipherText), iv: iv);
       decryptedString = utf8.decode(decrypted);
     } on Exception catch (e) {
       decryptedString = e.toString();
@@ -93,10 +86,10 @@ class _MyAppState extends State<MyApp> {
                 child: const Text("Encrypt Data"),
               ),
 
-              // Button to decrypt the data
+              // // Button to decrypt the data
               ElevatedButton(
                 onPressed: () async {
-                  await dencryptingData("6mUhaDY5oDecoMYX3eWZag==");
+                  await dencryptingData("AA+WdcgTaGRNC59C9sJEvg==");
                   print("Decrypted data: $_decryptedString");
                 },
                 child: const Text("Decrypt data"),
