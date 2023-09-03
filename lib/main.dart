@@ -33,7 +33,7 @@ class _MyAppState extends State<MyApp> {
     try {
       // Encryption
       String plainText = 'Chanaka';
-      final encrypter = enc.Encrypter(enc.AES(key, mode: enc.AESMode.cbc));
+      final encrypter = enc.Encrypter(enc.AES(key, mode: enc.AESMode.cbc, padding: 'PKCS7'));
       final encrypted = encrypter.encrypt(plainText, iv: iv);
       encryptedText = encrypted.base64;
     } on Exception catch (e) {
@@ -53,7 +53,7 @@ class _MyAppState extends State<MyApp> {
 
     try {
       final decrypter =
-          enc.Encrypter(enc.AES(key, mode: enc.AESMode.cbc));
+          enc.Encrypter(enc.AES(key, mode: enc.AESMode.cbc,padding: 'PKCS7'));
       final decrypted =
           decrypter.decryptBytes(Encrypted.from64(chipherText), iv: iv);
       decryptedString = utf8.decode(decrypted);
