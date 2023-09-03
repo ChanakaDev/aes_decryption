@@ -9,9 +9,8 @@ environment:
   sdk: ">=3.0.5 <4.0.0"
 
 dependencies:
-  # AES Encryption and Decryption 
-  aespack: ^0.0.3
   cupertino_icons: ^1.0.2
+  encrypt: ^5.0.1
   flutter:
     sdk: flutter
 
