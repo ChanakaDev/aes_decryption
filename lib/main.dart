@@ -19,8 +19,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final key = enc.Key.fromUtf8('4f1aaae66406e358');
-  final iv = enc.IV.fromUtf8('df1e180949793972');
+  final key = enc.Key.fromUtf8('5f53bf8253c088a8');
+  final iv = enc.IV.fromUtf8('503baa1fee350f86');
 
   // variables to hold plain text and the chipher text
   String _encyrptedString = '';
@@ -33,7 +33,8 @@ class _MyAppState extends State<MyApp> {
     try {
       // Encryption
       String plainText = 'Chanaka';
-      final encrypter = enc.Encrypter(enc.AES(key, mode: enc.AESMode.cbc, padding: 'PKCS7'));
+      final encrypter =
+          enc.Encrypter(enc.AES(key, mode: enc.AESMode.cbc, padding: 'PKCS7'));
       final encrypted = encrypter.encrypt(plainText, iv: iv);
       encryptedText = encrypted.base64;
     } on Exception catch (e) {
@@ -53,7 +54,7 @@ class _MyAppState extends State<MyApp> {
 
     try {
       final decrypter =
-          enc.Encrypter(enc.AES(key, mode: enc.AESMode.cbc,padding: 'PKCS7'));
+          enc.Encrypter(enc.AES(key, mode: enc.AESMode.cbc, padding: 'PKCS7'));
       final decrypted =
           decrypter.decryptBytes(Encrypted.from64(chipherText), iv: iv);
       decryptedString = utf8.decode(decrypted);
@@ -71,7 +72,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('AesPack example app'),
+          title: const Text('AES Decryption'),
         ),
         body: Center(
           child: Column(
@@ -89,7 +90,7 @@ class _MyAppState extends State<MyApp> {
               // Button to decrypt the data
               ElevatedButton(
                 onPressed: () async {
-                  await dencryptingData("AA+WdcgTaGRNC59C9sJEvg==");
+                  await dencryptingData("qWO93BwPURBMSiIXXCSMgw==");
                   print("Decrypted data: $_decryptedString");
                 },
                 child: const Text("Decrypt data"),
